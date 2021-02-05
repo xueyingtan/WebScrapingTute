@@ -15,7 +15,7 @@ import pandas as pd
 @click.option(
     '-f','--filename', nargs=1,
     default="{}.csv".format(datetime.datetime.now().replace(microsecond=0).isoformat().replace(':','.')),
-    help='What to name the resulting CSV file. The .csv extension will be added to the provided name.'
+    help='What to name the resulting CSV file (recommend including .csv extension).'
 )
 @click.option('-q','--query', nargs=1, default="",
               help="Search query to collect results for on The Conversation.")
