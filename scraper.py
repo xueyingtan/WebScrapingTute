@@ -8,9 +8,17 @@ import numpy as np
 import pandas as pd
 
 @click.command()
-@click.option('-l','--limit', nargs=1, default=float('inf'))
-@click.option('-f','--filename', nargs=1, default="{}.csv".format(datetime.datetime.now().replace(microsecond=0).isoformat().replace(':','.')))
-@click.option('-q','--query', nargs=1, default="")
+@click.option(
+    '-l','--limit', nargs=1, default=float('inf'),
+    help='A maximum number of result pages to collect. Defaults to no limit / collect all pages.'
+)
+@click.option(
+    '-f','--filename', nargs=1,
+    default="{}.csv".format(datetime.datetime.now().replace(microsecond=0).isoformat().replace(':','.')),
+    help='What to name the resulting CSV file. The .csv extension will be added to the provided name.'
+)
+@click.option('-q','--query', nargs=1, default="",
+              help="Search query to collect results for on The Conversation.")
 def main(limit, filename, query):
     url = "https://theconversation.com" #baseurl
     urlquery = url+"/au/search?q="+query #contruct the url in ocnjuction with your query
