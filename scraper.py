@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 
 @click.command()
+@click.argument('query', nargs=1, default="")
 @click.option(
     '-l','--limit', nargs=1, default=float('inf'),
     help='A maximum number of results to collect. Minimum number of the results is 10. Defaults to no limit / collect all results.'
@@ -17,9 +18,10 @@ import pandas as pd
     default="{}.csv".format(datetime.datetime.now().replace(microsecond=0).isoformat().replace(':','.')),
     help='What to name the resulting CSV file (recommend including .csv extension).'
 )
-@click.option('-q','--query', nargs=1, default="",
-              help="Search query to collect results for on The Conversation.")
 def main(limit, filename, query):
+    if query == "":
+        print("Please include query (e.g. scrape covid).")
+        exit()
     url = "https://theconversation.com" #baseurl
     urlquery = url+"/au/search?q="+query #contruct the url in ocnjuction with your query
 
@@ -31,12 +33,12 @@ def main(limit, filename, query):
         articles = soup.select("div#content-results article")
         for article in articles:
             row = []
-            row.append(article.time['datetime']) if article.time['datetime'] else "" #datetime
-            row.append(article.a['title']) if article.a['title'] else "" #title
-            row.append(article.select_one("p.byline").a.text) if article.select_one("p.byline").a.text else ""#author
-            row.append(article.select_one("p.byline").em.text) if article.select_one("p.byline").em else "" #organisation
-            row.append(article.header.next_sibling.next_sibling.text) if article.header.next_sibling.next_sibling.text else "" #text (next sibling of header is nextline character)
-            row.append(url+"/"+article.a["href"].split("%2F")[-1]) if article.a["href"] else "" #article's link
+            row.append(article.time['datetime']) if article.time['datetime'] else row.append("") #datetime
+            row.append(article.a['title']) if article.a['title'] else row.append("") #title
+            row.append(article.select_one("p.byline").a.text) if article.select_one("p.byline").a.text else row.append("")#author
+            row.append(article.select_one("p.byline").em.text) if article.select_one("p.byline").em else row.append("") #organisation
+            row.append(article.header.next_sibling.next_sibling.text) if article.header.next_sibling.next_sibling.text else row.append("") #text (next sibling of header is nextline character)
+            row.append(url+"/"+article.a["href"].split("%2F")[-1]) if article.a["href"] else row.append("") #article's link
             table.append(row)
         limit -= len(articles) # keep track of the number of articles so far if there is a limit
         urlquery = url+soup.find('a',attrs={'rel':'next'})['href'] # get next page if there is one (Each page returns 10 article posts)
