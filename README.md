@@ -16,7 +16,7 @@ pip install -e .
 ## Usage
 
 After installing webscraper as shown above, in your command terminal in the same directory
-as this README file, run the `scrape` command.
+as this README file, run the `scrape` command with your desired options as shown below.
 
 ### Command Line
 ```
