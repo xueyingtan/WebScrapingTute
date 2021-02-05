@@ -7,4 +7,6 @@ setup(
         'console_scripts': [
             'scrape = scraper:main'
         ]
-    })
+    },
+    python_requires=">=3.8"
+)
